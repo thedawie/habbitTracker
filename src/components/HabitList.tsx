@@ -3,6 +3,7 @@ import { format, differenceInDays, parseISO, isSameDay } from 'date-fns';
 import { CheckCircle, AlertCircle, Trash2, RefreshCw, Edit2, X } from 'lucide-react';
 import { Habit } from '../types';
 import { HabitForm } from './HabitForm';
+import clsx from 'clsx';
 
 interface HabitListProps {
   habits: Habit[];
@@ -22,6 +23,7 @@ export function HabitList({
   showActions = false 
 }: HabitListProps) {
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
+  const [jigglingHabitId, setJigglingHabitId] = useState<string | null>(null);
 
   const isCompletedToday = (habit: Habit) => {
     return habit.completedDates.some(date => 
@@ -57,6 +59,12 @@ export function HabitList({
     setEditingHabitId(null);
   };
 
+  const handleComplete = (habitId: string) => {
+    setJigglingHabitId(habitId);
+    setTimeout(() => setJigglingHabitId(null), 500); // Jiggle animation lasts 500ms
+    onComplete(habitId);
+  };
+
   return (
     <div className="space-y-4">
       {habits.map((habit) => {
@@ -86,7 +94,11 @@ export function HabitList({
         return (
           <div
             key={habit.id}
-            className={`p-6 rounded-lg border ${getStatusColor(status)} transition-all duration-300`}
+            className={clsx(
+              "p-6 rounded-lg border transition-all duration-300",
+              getStatusColor(status),
+              { "animate-jiggle": jigglingHabitId === habit.id }
+            )}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -119,7 +131,7 @@ export function HabitList({
                       </>
                     )}
                     <button
-                      onClick={() => onComplete(habit.id)}
+                      onClick={() => handleComplete(habit.id)}
                       className="p-1.5 rounded-full hover:bg-white/20 transition-colors"
                       title={completed ? 'Mark as incomplete' : 'Mark as complete'}
                     >
