@@ -6,6 +6,7 @@ import { HabitForm } from './components/HabitForm';
 import { Habit } from './types';
 import { startOfDay, isSameDay, parseISO } from 'date-fns';
 import { getFromLocalStorage, setToLocalStorage } from './utils/localStorage';
+import { ProgressBar } from './components/ProgressBar';
 
 function handleLocalStorageError(error: Error) {
   console.error('LocalStorage Error:', error);
@@ -106,63 +107,49 @@ function App() {
     );
   };
 
+  const getCompletionPercentage = () => {
+    const todayHabits = getTodayHabits();
+    const completedHabits = todayHabits.filter(habit => {
+      return habit.completedDates.some(date => isSameDay(parseISO(date), new Date()));
+    });
+    return Math.round((completedHabits.length / todayHabits.length) * 100) || 0;
+  };
+
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
-        <nav className="bg-white shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex">
-                <Link to="/" className="flex items-center px-4 text-indigo-600 hover:text-indigo-800 transition-colors">
-                  <HomeIcon className="h-5 w-5" />
-                  <span className="ml-2 font-medium">Home</span>
-                </Link>
-              </div>
-              <div className="flex">
-                <Link to="/manage" className="flex items-center px-4 text-indigo-600 hover:text-indigo-800 transition-colors">
-                  <Settings className="h-5 w-5" />
-                  <span className="ml-2 font-medium">Manage Habits</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </nav>
+      <div className="min-h-screen bg-gray-900 text-white">
+        <header className="text-center py-8">
+          <h1 className="text-4xl font-bold mb-2">HABIT TRACKER</h1>
+          <p className="text-lg text-gray-400">Stay consistent and achieve your goals</p>
+        </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-3xl mx-auto px-4">
+          <section className="mb-8 text-center">
+            <h2 className="text-xl font-semibold mb-4">✨ Daily Momentum ✨</h2>
+            <ProgressBar percentage={getCompletionPercentage()} />
+          </section>
+
           <Routes>
             <Route path="/" element={
               <div className="space-y-6">
-                <div className="text-center mb-12">
-                  <h1 className="text-4xl font-bold text-indigo-900 mb-2">Daily Progress</h1>
-                  <p className="text-gray-600">Track your habits, build your future</p>
-                </div>
-                <div className="max-w-3xl mx-auto">
-                  <HabitList 
-                    habits={getTodayHabits()} 
-                    onComplete={handleCompleteHabit}
-                    showActions={false}
-                  />
-                </div>
+                <HabitList 
+                  habits={getTodayHabits()} 
+                  onComplete={handleCompleteHabit}
+                  showActions={false}
+                />
               </div>
             } />
             <Route path="/manage" element={
               <div className="space-y-8">
-                <h1 className="text-3xl font-bold text-indigo-900">Manage Habits</h1>
-                <div className="bg-white shadow-lg rounded-xl p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Add New Habit</h2>
-                  <HabitForm onSubmit={handleAddHabit} />
-                </div>
-                <div className="bg-white shadow-lg rounded-xl p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">All Habits</h2>
-                  <HabitList 
-                    habits={habits} 
-                    onComplete={handleCompleteHabit}
-                    onDelete={handleDeleteHabit}
-                    onReset={handleResetHabit}
-                    onEdit={handleEditHabit}
-                    showActions={true}
-                  />
-                </div>
+                <HabitForm onSubmit={handleAddHabit} />
+                <HabitList 
+                  habits={habits} 
+                  onComplete={handleCompleteHabit}
+                  onDelete={handleDeleteHabit}
+                  onReset={handleResetHabit}
+                  onEdit={handleEditHabit}
+                  showActions={true}
+                />
               </div>
             } />
           </Routes>
