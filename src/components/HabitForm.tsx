@@ -35,7 +35,7 @@ export function HabitForm({ onSubmit, initialData }: HabitFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="name" className="block text-sm font-bold text-white">
           Habit Name
         </label>
         <input
@@ -43,17 +43,17 @@ export function HabitForm({ onSubmit, initialData }: HabitFormProps) {
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Frequency</label>
+        <label className="block text-sm font-bold text-white">Frequency</label>
         <select
           value={frequency}
           onChange={(e) => setFrequency(e.target.value as 'daily' | 'weekly')}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         >
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
