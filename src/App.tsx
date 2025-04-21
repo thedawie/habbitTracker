@@ -7,16 +7,21 @@ import { Habit } from './types';
 import { startOfDay, isSameDay, parseISO } from 'date-fns';
 import { getFromLocalStorage, setToLocalStorage } from './utils/localStorage';
 
+function handleLocalStorageError(error: Error) {
+  console.error('LocalStorage Error:', error);
+  // Optionally, display a user-friendly message or log to an external service
+}
+
 function App() {
   const [habits, setHabits] = useState<Habit[]>(() => {
-    return getFromLocalStorage<Habit[]>('habits', []).map((habit: Habit) => ({
+    return getFromLocalStorage<Habit[]>('habits', [], handleLocalStorageError).map((habit: Habit) => ({
       ...habit,
       completedDates: habit.completedDates || [],
     }));
   });
 
   useEffect(() => {
-    setToLocalStorage('habits', habits);
+    setToLocalStorage('habits', habits, handleLocalStorageError);
   }, [habits]);
 
   const handleAddHabit = (newHabit: Omit<Habit, 'id' | 'lastCompleted' | 'streak' | 'missedOnce' | 'completedDates'>) => {
