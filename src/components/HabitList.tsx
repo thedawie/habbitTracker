@@ -4,6 +4,7 @@ import { CheckCircle, AlertCircle, Trash2, RefreshCw, Edit2, X } from 'lucide-re
 import { Habit } from '../types';
 import { HabitForm } from './HabitForm';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 
 interface HabitListProps {
   habits: Habit[];
@@ -164,7 +165,7 @@ export function HabitList({
       })}
       {habits.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          No habits found. Start by adding a new habit!
+          No habits found. Start by <Link to="/manage" className="text-indigo-500 hover:underline">adding a new habit</Link>!
         </div>
       )}
     </div>
