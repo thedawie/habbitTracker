@@ -5,19 +5,18 @@ import { HabitList } from './components/HabitList';
 import { HabitForm } from './components/HabitForm';
 import { Habit } from './types';
 import { startOfDay, isSameDay, parseISO } from 'date-fns';
+import { getFromLocalStorage, setToLocalStorage } from './utils/localStorage';
 
 function App() {
   const [habits, setHabits] = useState<Habit[]>(() => {
-    const saved = localStorage.getItem('habits');
-    const parsedHabits = saved ? JSON.parse(saved) : [];
-    return parsedHabits.map((habit: Habit) => ({
+    return getFromLocalStorage<Habit[]>('habits', []).map((habit: Habit) => ({
       ...habit,
       completedDates: habit.completedDates || [],
     }));
   });
 
   useEffect(() => {
-    localStorage.setItem('habits', JSON.stringify(habits));
+    setToLocalStorage('habits', habits);
   }, [habits]);
 
   const handleAddHabit = (newHabit: Omit<Habit, 'id' | 'lastCompleted' | 'streak' | 'missedOnce' | 'completedDates'>) => {
