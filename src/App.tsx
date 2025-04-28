@@ -8,7 +8,7 @@ import { startOfDay, isSameDay, parseISO } from 'date-fns';
 import { getFromLocalStorage, setToLocalStorage } from './utils/localStorage';
 import { ProgressBar } from './components/ProgressBar';
 import { Toaster, toast } from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
+import { usePageViewMetrics } from './hooks/usePageViewMetrics.ts';
 
 
 function handleLocalStorageError(error: Error) {
@@ -17,6 +17,8 @@ function handleLocalStorageError(error: Error) {
 }
 
 function App() {
+
+  usePageViewMetrics();
 
   const [habits, setHabits] = useState<Habit[]>(() => {
     return getFromLocalStorage<Habit[]>('habits', [], handleLocalStorageError).map((habit: Habit) => ({
