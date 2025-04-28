@@ -9,7 +9,6 @@ import { getFromLocalStorage, setToLocalStorage } from './utils/localStorage';
 import { ProgressBar } from './components/ProgressBar';
 import { Toaster, toast } from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
-import { trackPageView } from './utils/analytics';
 
 
 function handleLocalStorageError(error: Error) {
@@ -18,10 +17,6 @@ function handleLocalStorageError(error: Error) {
 }
 
 function App() {
-  const location = useLocation();
-  useEffect(() => {
-    trackPageView(location.pathname);
-  }, [location]);
 
   const [habits, setHabits] = useState<Habit[]>(() => {
     return getFromLocalStorage<Habit[]>('habits', [], handleLocalStorageError).map((habit: Habit) => ({
