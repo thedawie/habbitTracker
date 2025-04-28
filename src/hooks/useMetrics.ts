@@ -6,7 +6,13 @@ interface MetricsContext {
 
 export function useMetrics(): MetricsContext {
   const trackEvent = useCallback((event: string, page: string) => {
-    fetch('http://localhost:5001/track', {
+    const endpoint = import.meta.env.VITE_TRACK_ENDPOINT;
+    if (!endpoint) {
+      console.error('Track endpoint is not defined in environment variables');
+      return;
+    }
+
+    fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
