@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sentry/react": "^9.13.0",
-    "@sentry/vite-plugin": "^3.3.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.3.1",
     "lucide-react": "^0.344.0",

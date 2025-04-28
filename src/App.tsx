@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import { Settings, ListChecks } from 'lucide-react';
 import { HabitList } from './components/HabitList';
 import { HabitForm } from './components/HabitForm';
@@ -8,6 +8,9 @@ import { startOfDay, isSameDay, parseISO } from 'date-fns';
 import { getFromLocalStorage, setToLocalStorage } from './utils/localStorage';
 import { ProgressBar } from './components/ProgressBar';
 import { Toaster, toast } from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
+import { trackPageView } from './utils/analytics';
+
 
 function handleLocalStorageError(error: Error) {
   console.error('LocalStorage Error:', error);
@@ -15,6 +18,11 @@ function handleLocalStorageError(error: Error) {
 }
 
 function App() {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+
   const [habits, setHabits] = useState<Habit[]>(() => {
     return getFromLocalStorage<Habit[]>('habits', [], handleLocalStorageError).map((habit: Habit) => ({
       ...habit,
@@ -120,56 +128,54 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-900 text-white">
-        <Toaster position="top-right" />
-        <header className="text-center py-8">
-          <h1 className="text-4xl font-bold mb-2">HABIT TRACKER</h1>
-          <p className="text-lg text-gray-400">Stay consistent and achieve your goals</p>
-        </header>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <Toaster position="top-right" />
+      <header className="text-center py-8">
+        <h1 className="text-4xl font-bold mb-2">HABIT TRACKER</h1>
+        <p className="text-lg text-gray-400">Stay consistent and achieve your goals</p>
+      </header>
 
-        <main className="max-w-3xl mx-auto px-4">
-          <nav className="flex justify-between items-center mb-8">
-            <Link to="/">
-              <ListChecks className="w-10 h-10 text-white" />
-            </Link>
-            <Link to="/manage">
-              <Settings className="w-10 h-10 text-white" />
-            </Link>
-          </nav>
+      <main className="max-w-3xl mx-auto px-4">
+        <nav className="flex justify-between items-center mb-8">
+          <Link to="/">
+            <ListChecks className="w-10 h-10 text-white" />
+          </Link>
+          <Link to="/manage">
+            <Settings className="w-10 h-10 text-white" />
+          </Link>
+        </nav>
 
-          <section className="mb-8 text-center">
-            <h2 className="text-xl font-semibold mb-4">✨ Daily Momentum ✨</h2>
-            <ProgressBar percentage={getCompletionPercentage()} />
-          </section>
+        <section className="mb-8 text-center">
+          <h2 className="text-xl font-semibold mb-4">✨ Daily Momentum ✨</h2>
+          <ProgressBar percentage={getCompletionPercentage()} />
+        </section>
 
-          <Routes>
-            <Route path="/" element={
-              <div className="space-y-6">
-                <HabitList 
-                  habits={getTodayHabits()} 
-                  onComplete={handleCompleteHabit}
-                  showActions={false}
-                />
-              </div>
-            } />
-            <Route path="/manage" element={
-              <div className="space-y-8">
-                <HabitForm onSubmit={handleAddHabit} />
-                <HabitList 
-                  habits={habits} 
-                  onComplete={handleCompleteHabit}
-                  onDelete={handleDeleteHabit}
-                  onReset={handleResetHabit}
-                  onEdit={handleEditHabit}
-                  showActions={true}
-                />
-              </div>
-            } />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+        <Routes>
+          <Route path="/" element={
+            <div className="space-y-6">
+              <HabitList 
+                habits={getTodayHabits()} 
+                onComplete={handleCompleteHabit}
+                showActions={false}
+              />
+            </div>
+          } />
+          <Route path="/manage" element={
+            <div className="space-y-8">
+              <HabitForm onSubmit={handleAddHabit} />
+              <HabitList 
+                habits={habits} 
+                onComplete={handleCompleteHabit}
+                onDelete={handleDeleteHabit}
+                onReset={handleResetHabit}
+                onEdit={handleEditHabit}
+                showActions={true}
+              />
+            </div>
+          } />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
