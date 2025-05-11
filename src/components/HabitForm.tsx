@@ -50,13 +50,7 @@ export function HabitForm({ onSubmit, initialData }: HabitFormProps) {
 
       <div>
         <label className="block text-sm font-bold text-white">Frequency</label>
-        <select
-          value={frequency}
-          onChange={(e) => setFrequency(e.target.value as 'daily' | 'weekly')}
-          className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-        >
-          <option value="daily">Daily</option>
-        </select>
+        <p className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm">Daily</p>
       </div>
 
       <button

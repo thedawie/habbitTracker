@@ -66,9 +66,15 @@ export function HabitList({
     onComplete(habitId);
   };
 
+  const sortedHabits = [...habits].sort((a, b) => {
+    const aCompleted = isCompletedToday(a) ? 1 : 0;
+    const bCompleted = isCompletedToday(b) ? 1 : 0;
+    return aCompleted - bCompleted; // Incomplete habits appear first
+  });
+
   return (
     <div className="space-y-4">
-      {habits.map((habit) => {
+      {sortedHabits.map((habit) => {
         const status = getHabitStatus(habit);
         const completed = isCompletedToday(habit);
         
