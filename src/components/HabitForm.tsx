@@ -56,35 +56,8 @@ export function HabitForm({ onSubmit, initialData }: HabitFormProps) {
           className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         >
           <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
         </select>
       </div>
-
-      {frequency === 'weekly' && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Select Days</label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {weekDays.map((day, index) => (
-              <label key={day} className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedDays.includes(index)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedDays([...selectedDays, index].sort());
-                    } else {
-                      setSelectedDays(selectedDays.filter(d => d !== index));
-                    }
-                  }}
-                  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  required={frequency === 'weekly' && selectedDays.length === 0}
-                />
-                <span className="ml-2">{day}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
 
       <button
         type="submit"
